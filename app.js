@@ -1,5 +1,5 @@
 require('dotenv').config();
-
+const mongoose = require('mongoose');   // tambahkan di antara require lainnya
 const express = require('express');
 const cors = require('cors');
 
@@ -33,6 +33,16 @@ app.use('/fakultas', fakultasRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server berjalan di http://localhost:${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server berjalan di http://localhost:${PORT}`);
+// });
+
+mongoose.connect(process.env.DB_URI)
+  .then(() => {
+    console.log('Terhubung ke MongoDB');
+    app.listen(PORT, () => console.log(`Server berjalan di http://localhost:${PORT}`));
+  })
+  .catch((err) => {
+    console.error('Gagal terhubung:', err.message);
+    process.exit(1);
+  });
